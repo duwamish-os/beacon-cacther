@@ -6,10 +6,14 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
+
     defaultConfig {
         applicationId "com.duwamish.radio.transmitter"
         minSdkVersion 14
+
+        //target
         targetSdkVersion 28
+
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

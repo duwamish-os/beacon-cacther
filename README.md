@@ -1,4 +1,13 @@
 
+Layouts
+------
+
+```bash
+IBEACON	m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24
+```
+
+https://beaconlayout.wordpress.com
+
 FIXME
 ----
 
@@ -9,7 +18,7 @@ FIXME
 2019-09-07 15:27:09.293 14718-14718/com.duwamish.radio.transmitter I/zygote:     at void android.support.v7.app.AppCompatDelegateImpl.ensureSubDecor() (AppCompatDelegateImpl.java:518)
 2019-09-07 15:27:09.293 14718-14718/com.duwamish.radio.transmitter I/zygote:     at void android.support.v7.app.AppCompatDelegateImpl.setContentView(int) (AppCompatDelegateImpl.java:466)
 2019-09-07 15:27:09.293 14718-14718/com.duwamish.radio.transmitter I/zygote:     at void android.support.v7.app.AppCompatActivity.setContentView(int) (AppCompatActivity.java:140)
-2019-09-07 15:27:09.293 14718-14718/com.duwamish.radio.transmitter I/zygote:     at void com.duwamish.radio.transmitter.MainActivity.onCreate(android.os.Bundle) (MainActivity.kt:46)
+2019-09-07 15:27:09.293 14718-14718/com.duwamish.radio.transmitter I/zygote:     at void com.duwamish.radio.transmitter.BeaconCatcherController.onCreate(android.os.Bundle) (BeaconCatcherController.kt:46)
 2019-09-07 15:27:09.293 14718-14718/com.duwamish.radio.transmitter I/zygote:     at void android.app.Activity.performCreate(android.os.Bundle, android.os.PersistableBundle) (Activity.java:6999)
 2019-09-07 15:27:09.293 14718-14718/com.duwamish.radio.transmitter I/zygote:     at void android.app.Activity.performCreate(android.os.Bundle) (Activity.java:6990)
 2019-09-07 15:27:09.293 14718-14718/com.duwamish.radio.transmitter I/zygote:     at void android.app.Instrumentation.callActivityOnCreate(android.app.Activity, android.os.Bundle) (Instrumentation.java:1214)
@@ -27,3 +36,12 @@ FIXME
 2019-09-07 15:27:09.295 14718-14718/com.duwamish.radio.transmitter I/zygote:     at java.lang.Class dalvik.system.BaseDexClassLoader.findClass(java.lang.String) (BaseDexClassLoader.java:125)
 
 ```
+
+run on device
+--
+
+- tap `Build number` 7(?) times
+- enable Debugging
+- restart debug bridge
+
+https://developer.android.com/studio/run/device
