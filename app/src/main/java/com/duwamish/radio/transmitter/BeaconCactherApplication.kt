@@ -1,6 +1,7 @@
 package com.duwamish.radio.transmitter
 
 import android.app.Application
+import android.content.Intent
 import android.util.Log
 import org.altbeacon.beacon.Region
 import org.altbeacon.beacon.startup.BootstrapNotifier
@@ -18,7 +19,7 @@ public class BeaconCactherApplication: Application(), BootstrapNotifier {
     override fun onCreate() {
         super.onCreate()
 
-        Log.i(LOG_KEY, "boostrap notifier")
+        Log.i(LOG_KEY, "bootsrap notifier")
 
         val beaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(this)
         val region = Region("backgroundRegion", null, null, null)
@@ -33,6 +34,10 @@ public class BeaconCactherApplication: Application(), BootstrapNotifier {
     override fun didEnterRegion(p0: Region?) {
         Log.i(LOG_KEY,"didEnterRegion ${p0}")
         Log.i(LOG_KEY,"didEnterRegion ${p0?.bluetoothAddress}")
+        regionBootstrap.disable();
+        val intent = Intent(this, BeaconCactherApplication::class.java)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        this.startActivity(intent)
     }
 
     override fun didExitRegion(p0: Region?) {

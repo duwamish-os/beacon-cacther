@@ -31,7 +31,7 @@ class BeaconCatcherController : AppCompatActivity(), BeaconConsumer {
 //        beaconManager.beaconParsers.add(BeaconParser().setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT))
         beaconManager.backgroundScanPeriod = 1000
 
-        beaconManager.beaconParsers.forEach{ p ->
+        beaconManager.beaconParsers.forEach { p ->
             Log.i(LOG_KEY, "registered beacon layouts: " + p.layout)
         }
 
@@ -47,23 +47,24 @@ class BeaconCatcherController : AppCompatActivity(), BeaconConsumer {
 
     override fun onBeaconServiceConnect() {
 
-        Log.i(LOG_KEY,"setup beacon")
+        Log.i(LOG_KEY, "setup beacon")
 
         beaconManager.removeAllMonitorNotifiers()
-        beaconManager.removeAllRangeNotifiers()
+//        beaconManager.removeAllRangeNotifiers()
 
         val beaconMonitor = object : MonitorNotifier {
             override fun didDetermineStateForRegion(p0: Int, p1: Region?) {
-                Log.i(LOG_KEY,"didDetermineStateForRegion")
+                Log.i(LOG_KEY, "didDetermineStateForRegion " + p0)
+                Log.i(LOG_KEY, "didDetermineStateForRegion " + p1)
             }
 
             override fun didEnterRegion(p0: Region?) {
-                Log.i(LOG_KEY,"didEnterRegion ${p0}")
-                Log.i(LOG_KEY,"didEnterRegion ${p0?.bluetoothAddress}")
+                Log.i(LOG_KEY, "didEnterRegion ${p0}")
+                Log.i(LOG_KEY, "didEnterRegion ${p0?.bluetoothAddress}")
             }
 
             override fun didExitRegion(p0: Region?) {
-                Log.i(LOG_KEY,"didExitRegion ${p0}")
+                Log.i(LOG_KEY, "didExitRegion ${p0}")
             }
 
         }

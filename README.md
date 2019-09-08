@@ -2,8 +2,10 @@
 Layouts
 ------
 
+* [iBeacon](https://developer.apple.com/ibeacon/)
+
 ```bash
-IBEACON	m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24
+m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24
 ```
 
 https://beaconlayout.wordpress.com
@@ -45,3 +47,7 @@ run on device
 - restart debug bridge
 
 https://developer.android.com/studio/run/device
+
+references
+---
+- https://github.com/kiteflo/iBeaconAndroidDemo
