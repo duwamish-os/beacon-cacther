@@ -59,3 +59,4 @@ references
 
 - https://github.com/kiteflo/iBeaconAndroidDemo
 - https://developer.radiusnetworks.com/2015/09/29/is-your-beacon-app-ready-for-android-6.html
+- https://github.com/Bridouille/android-beacon-scanner

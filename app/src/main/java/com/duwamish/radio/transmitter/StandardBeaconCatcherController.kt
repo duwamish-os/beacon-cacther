@@ -13,7 +13,9 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import com.duwamish.radio.transmitter.IBeaconScanApi.Companion.leScanCallback
+import android.widget.EditText
+import android.widget.TextView
+
 import kotlinx.android.synthetic.main.activity_main.*
 
 class StandardBeaconCatcherController : AppCompatActivity() {
@@ -26,11 +28,14 @@ class StandardBeaconCatcherController : AppCompatActivity() {
     private val scan_interval_ms = 5000L
     private var isScanning = false
     private var PERMISSION_REQUEST_COARSE_LOCATION = 1
+    private lateinit var editText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        editText = findViewById<TextView>(R.id.beacon_name)
 
         val alertDialog = AlertDialog.Builder(this)
         val locationGranted =
@@ -41,8 +46,11 @@ class StandardBeaconCatcherController : AppCompatActivity() {
             alertDialog.setMessage("Please grant location access so this app can detect beacons.")
             alertDialog.setPositiveButton(android.R.string.ok, null)
 
-            alertDialog.setOnDismissListener {_ ->
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), PERMISSION_REQUEST_COARSE_LOCATION)
+            alertDialog.setOnDismissListener { _ ->
+                requestPermissions(
+                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                    PERMISSION_REQUEST_COARSE_LOCATION
+                )
             }
 
             alertDialog.show()
@@ -58,9 +66,24 @@ class StandardBeaconCatcherController : AppCompatActivity() {
         override fun run() {
 
             if (isScanning) {
-                btAdapter.stopLeScan(leScanCallback)
+                btAdapter.stopLeScan { device, rssi, scanRecord ->
+                    IBeaconScanApi.ibeacon(
+                        device,
+                        rssi,
+                        scanRecord
+                    )
+                }
             } else {
-                btAdapter.startLeScan(leScanCallback)
+                btAdapter.startLeScan { device, rssi, scanRecord ->
+                    val beacon = IBeaconScanApi.ibeacon(
+                        device,
+                        rssi,
+                        scanRecord
+                    )
+                    if(beacon != "no ibeacons found") {
+                        editText.setText(beacon)
+                    }
+                }
             }
 
             isScanning = !isScanning

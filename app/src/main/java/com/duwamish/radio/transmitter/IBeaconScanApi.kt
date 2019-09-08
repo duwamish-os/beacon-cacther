@@ -9,9 +9,9 @@ public class IBeaconScanApi {
 
     companion object {
 
-        private val LOG_TAG = "StandardBeaconCacther"
+        private val LOG_TAG = "IBeaconScanApi"
 
-        val leScanCallback = BluetoothAdapter.LeScanCallback { device, rssi, scanRecord ->
+        fun ibeacon(device: BluetoothDevice, rssi: Int, scanRecord: ByteArray): String {
             var startByte = 2
             var patternFound = false
             while (startByte <= 5) {
@@ -43,7 +43,11 @@ public class IBeaconScanApi {
                 // minor
                 val minor = Hex.minor(scanRecord, startByte)
 
-                Log.i(LOG_TAG, "UUID: $uuid\\nmajor: $major\\nminor$minor")
+                Log.i(LOG_TAG, "UUID: $uuid, major: $major, minor: $minor, RSSI: $rssi, name: ${device.name}")
+
+                return uuid
+            } else {
+                return "no ibeacons found"
             }
         }
 
