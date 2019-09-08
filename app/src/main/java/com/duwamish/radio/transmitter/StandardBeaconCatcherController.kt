@@ -13,10 +13,13 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
-import android.widget.TextView
-
+import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_main.*
+import java.time.LocalDateTime
+import android.widget.ArrayAdapter
+import java.util.*
+import kotlin.collections.HashMap
+
 
 class StandardBeaconCatcherController : AppCompatActivity() {
 
@@ -28,14 +31,16 @@ class StandardBeaconCatcherController : AppCompatActivity() {
     private val scan_interval_ms = 5000L
     private var isScanning = false
     private var PERMISSION_REQUEST_COARSE_LOCATION = 1
-    private lateinit var editText: TextView
+    private lateinit var beaconsView: ListView
+
+    private var beacons = HashMap<String, LocalDateTime>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        editText = findViewById<TextView>(R.id.beacon_name)
+        beaconsView = findViewById<ListView>(R.id.beacons)
 
         val alertDialog = AlertDialog.Builder(this)
         val locationGranted =
@@ -55,14 +60,14 @@ class StandardBeaconCatcherController : AppCompatActivity() {
 
             alertDialog.show()
         } else {
-            scanHandler.post(scanRunnable)
+            scanHandler.post(scanRunnable(this))
         }
 
         btManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         btAdapter = btManager.adapter
     }
 
-    private val scanRunnable = object : Runnable {
+    private fun scanRunnable(context: Context) = object : Runnable {
         override fun run() {
 
             if (isScanning) {
@@ -80,9 +85,17 @@ class StandardBeaconCatcherController : AppCompatActivity() {
                         rssi,
                         scanRecord
                     )
-                    if(beacon != "no ibeacons found") {
-                        editText.setText(beacon)
+
+                    if(beacon != "") {
+                        beacons.put(beacon, LocalDateTime.now())
                     }
+                    val beaconsViewAdaptor = ArrayAdapter<String>(
+                        context,
+                        android.R.layout.simple_list_item_1,
+                        beacons.keys.toList()
+                    )
+
+                    beaconsView.adapter = beaconsViewAdaptor
                 }
             }
 

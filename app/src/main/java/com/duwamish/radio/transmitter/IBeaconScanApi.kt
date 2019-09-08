@@ -47,7 +47,7 @@ public class IBeaconScanApi {
 
                 return uuid
             } else {
-                return "no ibeacons found"
+                return ""
             }
         }
 

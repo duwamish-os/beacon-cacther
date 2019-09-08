@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.duwamish.radio.transmitter"
-        minSdkVersion 23
+        minSdkVersion 26 //upgraded to support java.time.LocalDateTime
 
         //target
         targetSdkVersion 28
