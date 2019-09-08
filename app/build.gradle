@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.duwamish.radio.transmitter"
-        minSdkVersion 14
+        minSdkVersion 23
 
         //target
         targetSdkVersion 28

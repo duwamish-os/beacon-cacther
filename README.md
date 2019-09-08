@@ -48,6 +48,14 @@ run on device
 
 https://developer.android.com/studio/run/device
 
+example beacon
+
+```bash
+2019-09-07 21:33:45.809 7141-7141/com.duwamish.radio.transmitter I/StandardBeaconCacther: UUID: P1F54E02-1E23-44P0-9C3D-512PB56ADED9\nmajor: 100\nminor100
+```
+
 references
 ---
+
 - https://github.com/kiteflo/iBeaconAndroidDemo
+- https://developer.radiusnetworks.com/2015/09/29/is-your-beacon-app-ready-for-android-6.html
