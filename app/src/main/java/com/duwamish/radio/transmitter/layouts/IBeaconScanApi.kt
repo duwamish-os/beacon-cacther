@@ -12,9 +12,9 @@ public class IBeaconScanApi {
 
         private val LOG_TAG = "IBeaconScanApi"
 
-        fun ibeacon(device: BluetoothDevice,
-                    rssi: Int,
-                    scanRecord: ByteArray): BeaconData? {
+        fun scan(device: BluetoothDevice,
+                 rssi: Int,
+                 scanRecord: ByteArray): BeaconData? {
             Log.i(LOG_TAG, "processing Ibeacon BLE")
 
             var startByte = 2

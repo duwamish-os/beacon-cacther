@@ -3,6 +3,8 @@ package com.duwamish.radio.transmitter
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -19,13 +21,12 @@ import android.widget.ArrayAdapter
 import com.duwamish.radio.transmitter.layouts.IBeaconScanApi
 import kotlin.collections.HashMap
 
-
 class StandardBeaconCatcherController : AppCompatActivity() {
 
     private val LOG_KEY = this.javaClass.name;
 
-    private lateinit var btManager: BluetoothManager
-    private lateinit var btAdapter: BluetoothAdapter
+    private lateinit var bluetoothManager: BluetoothManager
+    private lateinit var bluetoothAdapter: BluetoothAdapter
     private val scanHandler = Handler()
     private val scan_interval_ms = 5000L
     private var isScanning = false
@@ -59,35 +60,31 @@ class StandardBeaconCatcherController : AppCompatActivity() {
 
             alertDialog.show()
         } else {
-            scanHandler.post(scanRunnable(this))
+            scanHandler.post(scanThread(this))
         }
 
-        btManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        btAdapter = btManager.adapter
+        bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothAdapter = bluetoothManager.adapter
     }
 
-    private fun scanRunnable(context: Context) = object : Runnable {
+    private fun scanThread(context: Context) = object : Runnable {
         override fun run() {
 
-            if (isScanning) {
-                btAdapter.stopLeScan { device, rssi, scanRecord ->
-                    IBeaconScanApi.ibeacon(
-                            device,
-                            rssi,
-                            scanRecord
-                    )
-                }
-            } else {
-                btAdapter.startLeScan { device, rssi, scanRecord ->
-                    val beacon = IBeaconScanApi.ibeacon(
-                            device,
-                            rssi,
-                            scanRecord
+            val scanner = bluetoothAdapter.bluetoothLeScanner
+
+            val scan = object : ScanCallback() {
+                override fun onScanResult(callbackType: Int, result: ScanResult) {
+                    Log.i(LOG_KEY, "scanning result $callbackType")
+                    val beacon = IBeaconScanApi.scan(
+                            result.device,
+                            result.rssi,
+                            result.scanRecord.bytes
                     )
 
                     if (beacon != null) {
                         beacons.put(beacon.uuid, beacon)
                     }
+
                     val beaconsViewAdaptor = ArrayAdapter<String>(
                             context,
                             android.R.layout.simple_list_item_1,
@@ -102,6 +99,21 @@ class StandardBeaconCatcherController : AppCompatActivity() {
 
                     beaconsView.adapter = beaconsViewAdaptor
                 }
+
+                override fun onBatchScanResults(results: List<ScanResult>) {
+                    Log.i(LOG_KEY, "scanning batch result $results")
+                    results.forEach { result -> onScanResult(0, result) }
+                }
+
+                override fun onScanFailed(errorCode: Int) {
+                    Log.i(LOG_KEY, "scanning failed $errorCode")
+                }
+            }
+
+            if (isScanning) {
+                scanner.stopScan(scan)
+            } else {
+                scanner.startScan(scan)
             }
 
             isScanning = !isScanning
@@ -129,8 +141,7 @@ class StandardBeaconCatcherController : AppCompatActivity() {
     override fun onRequestPermissionsResult(
             requestCode: Int,
             permissions: Array<String>,
-            grantResults: IntArray
-    ) {
+            grantResults: IntArray) {
         when (requestCode) {
             PERMISSION_REQUEST_COARSE_LOCATION -> {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
