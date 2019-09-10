@@ -19,6 +19,8 @@ public class EddystoneScanApi {
 
             Log.i(LOG_KEY, "validating eddystone")
 
+            if(scanRecord == null) return null
+
             for (startByte in 0 until scanRecord.size) {
                 if (scanRecord.size - startByte > 19) { // need at least 19 bytes for Eddystone-UID
                     // Check that this has the right pattern needed for this to be Eddystone-UID

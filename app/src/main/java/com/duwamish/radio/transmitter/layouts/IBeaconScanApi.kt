@@ -51,9 +51,6 @@ public class IBeaconScanApi {
                 Log.i(LOG_TAG, "UUID: $uuid, major: $major, minor: $minor, RSSI: $rssi, name: ${device.name}")
 
                 return BeaconData(uuid, major, minor, rssi, LocalDateTime.now())
-            } else if (EddystoneScanApi.scan(device, rssi, scanRecord) != null) {
-                Log.i(LOG_TAG, "eddy stone")
-                return BeaconData(String(scanRecord), 0, 0, rssi, LocalDateTime.now())
             } else {
                 return null
             }

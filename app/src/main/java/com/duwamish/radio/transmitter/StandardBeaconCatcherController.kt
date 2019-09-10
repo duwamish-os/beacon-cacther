@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.ParcelUuid
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -18,6 +19,7 @@ import android.view.MenuItem
 import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.ArrayAdapter
+import com.duwamish.radio.transmitter.layouts.EddystoneScanApi
 import com.duwamish.radio.transmitter.layouts.IBeaconScanApi
 import kotlin.collections.HashMap
 
@@ -81,6 +83,16 @@ class StandardBeaconCatcherController : AppCompatActivity() {
                             result.scanRecord.bytes
                     )
 
+                    val fromString = ParcelUuid.fromString("0000FEAA-0000-1000-8000-00805F9B34FB")
+
+                    if(beacon == null && result.scanRecord.getServiceData(fromString) != null) {
+                        val eddystone = EddystoneScanApi.scan(
+                                result.device,
+                                result.rssi,
+                                result.scanRecord.getServiceData(fromString)
+                        )
+                    }
+
                     if (beacon != null) {
                         beacons.put(beacon.uuid, beacon)
                     }
@@ -106,7 +118,18 @@ class StandardBeaconCatcherController : AppCompatActivity() {
                 }
 
                 override fun onScanFailed(errorCode: Int) {
-                    Log.i(LOG_KEY, "scanning failed $errorCode")
+                    Log.i(LOG_KEY, "scanning failed with code SCAN_FAILED_$errorCode. " +
+                            "See https://developer.android.com/reference/android/bluetooth/le/ScanCallback.html for more")
+                    if(errorCode == 2) {
+                        val builder = AlertDialog.Builder(context)
+                        builder.setTitle("Error")
+                        builder.setMessage("Error scanning. Please reboot Bluetooth or device")
+                        builder.setPositiveButton(android.R.string.ok, null)
+                        builder.setOnDismissListener { }
+                        builder.show()
+                        //bluetoothAdapter.disable()
+                        //bluetoothAdapter.enable()
+                    }
                 }
             }
 
@@ -149,7 +172,8 @@ class StandardBeaconCatcherController : AppCompatActivity() {
                 } else {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle("Functionality limited")
-                    builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons when in the background.")
+                    builder.setMessage("Since location access has not been granted, " +
+                            "this app will not be able to discover beacons when in the background.")
                     builder.setPositiveButton(android.R.string.ok, null)
                     builder.setOnDismissListener { }
                     builder.show()
