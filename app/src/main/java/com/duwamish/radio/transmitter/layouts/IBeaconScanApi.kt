@@ -1,9 +1,10 @@
-package com.duwamish.radio.transmitter
+package com.duwamish.radio.transmitter.layouts
 
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothAdapter
 import android.util.Log
-
+import com.duwamish.radio.transmitter.BeaconData
+import com.duwamish.radio.transmitter.Hex
+import java.time.LocalDateTime
 
 public class IBeaconScanApi {
 
@@ -11,13 +12,17 @@ public class IBeaconScanApi {
 
         private val LOG_TAG = "IBeaconScanApi"
 
-        fun ibeacon(device: BluetoothDevice, rssi: Int, scanRecord: ByteArray): String {
+        fun ibeacon(device: BluetoothDevice,
+                    rssi: Int,
+                    scanRecord: ByteArray): BeaconData? {
+            Log.i(LOG_TAG, "processing Ibeacon BLE")
+
             var startByte = 2
             var patternFound = false
             while (startByte <= 5) {
                 if (scanRecord[startByte + 2].toInt() and 0xff == 0x02 && //Identifies an iBeacon
-                    scanRecord[startByte + 3].toInt() and 0xff == 0x15
-                ) { //Identifies correct data length
+                    scanRecord[startByte + 3].toInt() and 0xff == 0x15) { //Identifies correct data length
+
                     patternFound = true
                     break
                 }
@@ -45,9 +50,12 @@ public class IBeaconScanApi {
 
                 Log.i(LOG_TAG, "UUID: $uuid, major: $major, minor: $minor, RSSI: $rssi, name: ${device.name}")
 
-                return uuid
+                return BeaconData(uuid, major, minor, rssi, LocalDateTime.now())
+            } else if (EddystoneScanApi.scan(device, rssi, scanRecord) != null) {
+                Log.i(LOG_TAG, "eddy stone")
+                return BeaconData(String(scanRecord), 0, 0, rssi, LocalDateTime.now())
             } else {
-                return ""
+                return null
             }
         }
 

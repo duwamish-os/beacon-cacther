@@ -24,4 +24,18 @@ public class Hex {
     public static int minor(byte[] scanRecord, int startByte) {
         return (scanRecord[startByte + 22] & 0xff) * 0x100 + (scanRecord[startByte + 23] & 0xff);
     }
+
+    public static boolean isEddy(byte[] advertisementPacket) {
+        return (advertisementPacket[0] & 0xFF) == 0xAA && (advertisementPacket[1] & 0xFF) == 0xFE;
+    }
+
+    public static boolean isNotEddy(byte[] advertisementPacket) {
+        return (advertisementPacket[0] & 0xFF) != 0xAA || (advertisementPacket[1] & 0xFF) != 0xFE;
+    }
+
+    public static boolean isEddyV2(byte[] scanRecord, int startByte) {
+        return (scanRecord[startByte + 0] == 0xaa &&
+                scanRecord[startByte + 1] == 0xfe &&
+                scanRecord[startByte + 2] == 0x00);
+    }
 }

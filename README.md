@@ -10,6 +10,9 @@ m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24
 
 https://beaconlayout.wordpress.com
 
+* [eddystone](https://developers.google.com/beacons/eddystone)
+- https://github.com/google/eddystone/tree/master/eddystone-uid
+
 FIXME
 ----
 
@@ -53,6 +56,13 @@ example beacon
 ```bash
 2019-09-07 21:33:45.809 7141-7141/com.duwamish.radio.transmitter I/StandardBeaconCacther: UUID: P1F54E02-1E23-44P0-9C3D-512PB56ADED9\nmajor: 100\nminor100
 ```
+build artifact
+---------------
+
+```bash
+./gradlew clean ##make sure to run before installing in device
+```
+- https://developer.android.com/studio/build/building-cmdline
 
 references
 ---
@@ -60,3 +70,4 @@ references
 - https://github.com/kiteflo/iBeaconAndroidDemo
 - https://developer.radiusnetworks.com/2015/09/29/is-your-beacon-app-ready-for-android-6.html
 - https://github.com/Bridouille/android-beacon-scanner
+- https://github.com/TakahikoKawasaki/nv-bluetooth

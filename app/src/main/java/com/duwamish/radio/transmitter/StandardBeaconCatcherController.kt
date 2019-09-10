@@ -15,9 +15,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_main.*
-import java.time.LocalDateTime
 import android.widget.ArrayAdapter
-import java.util.*
+import com.duwamish.radio.transmitter.layouts.IBeaconScanApi
 import kotlin.collections.HashMap
 
 
@@ -33,7 +32,7 @@ class StandardBeaconCatcherController : AppCompatActivity() {
     private var PERMISSION_REQUEST_COARSE_LOCATION = 1
     private lateinit var beaconsView: ListView
 
-    private var beacons = HashMap<String, LocalDateTime>()
+    private var beacons = HashMap<String, BeaconData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +43,7 @@ class StandardBeaconCatcherController : AppCompatActivity() {
 
         val alertDialog = AlertDialog.Builder(this)
         val locationGranted =
-            this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && locationGranted) {
             alertDialog.setTitle("This app needs location access")
@@ -53,8 +52,8 @@ class StandardBeaconCatcherController : AppCompatActivity() {
 
             alertDialog.setOnDismissListener { _ ->
                 requestPermissions(
-                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                    PERMISSION_REQUEST_COARSE_LOCATION
+                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                        PERMISSION_REQUEST_COARSE_LOCATION
                 )
             }
 
@@ -73,26 +72,32 @@ class StandardBeaconCatcherController : AppCompatActivity() {
             if (isScanning) {
                 btAdapter.stopLeScan { device, rssi, scanRecord ->
                     IBeaconScanApi.ibeacon(
-                        device,
-                        rssi,
-                        scanRecord
+                            device,
+                            rssi,
+                            scanRecord
                     )
                 }
             } else {
                 btAdapter.startLeScan { device, rssi, scanRecord ->
                     val beacon = IBeaconScanApi.ibeacon(
-                        device,
-                        rssi,
-                        scanRecord
+                            device,
+                            rssi,
+                            scanRecord
                     )
 
-                    if(beacon != "") {
-                        beacons.put(beacon, LocalDateTime.now())
+                    if (beacon != null) {
+                        beacons.put(beacon.uuid, beacon)
                     }
                     val beaconsViewAdaptor = ArrayAdapter<String>(
-                        context,
-                        android.R.layout.simple_list_item_1,
-                        beacons.keys.toList()
+                            context,
+                            android.R.layout.simple_list_item_1,
+                            beacons.map { b ->
+                                "UUID: " + b.key + "\n" +
+                                        "Major: " + b.value.major + "\n" +
+                                        "Minor: " + b.value.minor + "\n" +
+                                        "Rssi: " + b.value.rssi + "\n" +
+                                        "Last Detected: " + b.value.lastDetected.toString() + "\n"
+                            }
                     )
 
                     beaconsView.adapter = beaconsViewAdaptor
@@ -122,9 +127,9 @@ class StandardBeaconCatcherController : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
     ) {
         when (requestCode) {
             PERMISSION_REQUEST_COARSE_LOCATION -> {
