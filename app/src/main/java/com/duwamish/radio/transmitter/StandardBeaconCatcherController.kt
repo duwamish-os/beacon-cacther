@@ -21,7 +21,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.ArrayAdapter
 import com.duwamish.radio.transmitter.layouts.EddystoneScanApi
 import com.duwamish.radio.transmitter.layouts.IBeaconScanApi
+import java.util.*
 import kotlin.collections.HashMap
+import android.util.Base64
 
 class StandardBeaconCatcherController : AppCompatActivity() {
 
@@ -35,7 +37,7 @@ class StandardBeaconCatcherController : AppCompatActivity() {
     private var PERMISSION_REQUEST_COARSE_LOCATION = 1
     private lateinit var beaconsView: ListView
 
-    private var beacons = HashMap<String, BeaconData>()
+    private var beacons = HashMap<String, Beacon>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,25 +78,26 @@ class StandardBeaconCatcherController : AppCompatActivity() {
 
             val scan = object : ScanCallback() {
                 override fun onScanResult(callbackType: Int, result: ScanResult) {
-                    Log.i(LOG_KEY, "scanning result $callbackType")
+                    Log.i(LOG_KEY, "found BLEs result $callbackType")
+
                     val beacon = IBeaconScanApi.scan(
                             result.device,
                             result.rssi,
                             result.scanRecord.bytes
                     )
 
-                    val fromString = ParcelUuid.fromString("0000FEAA-0000-1000-8000-00805F9B34FB")
-
-                    if(beacon == null && result.scanRecord.getServiceData(fromString) != null) {
-                        val eddystone = EddystoneScanApi.scan(
-                                result.device,
-                                result.rssi,
-                                result.scanRecord.getServiceData(fromString)
-                        )
-                    }
+                    val eddystone = EddystoneScanApi.scan(
+                            result.device,
+                            result.rssi,
+                            result
+                    )
 
                     if (beacon != null) {
                         beacons.put(beacon.uuid, beacon)
+                    }
+
+                    if (eddystone != null) {
+                        beacons.put(eddystone.uuid, eddystone)
                     }
 
                     val beaconsViewAdaptor = ArrayAdapter<String>(
@@ -120,7 +123,7 @@ class StandardBeaconCatcherController : AppCompatActivity() {
                 override fun onScanFailed(errorCode: Int) {
                     Log.i(LOG_KEY, "scanning failed with code SCAN_FAILED_$errorCode. " +
                             "See https://developer.android.com/reference/android/bluetooth/le/ScanCallback.html for more")
-                    if(errorCode == 2) {
+                    if (errorCode == 2) {
                         val builder = AlertDialog.Builder(context)
                         builder.setTitle("Error")
                         builder.setMessage("Error scanning. Please reboot Bluetooth or device")

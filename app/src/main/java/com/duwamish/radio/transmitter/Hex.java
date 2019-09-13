@@ -22,6 +22,18 @@ public class Hex {
         return new String(hexChars);
     }
 
+    public static String toHexString(byte[] dataBytes, int a, int b) {
+        int mn = Math.min(dataBytes.length - a, b);
+        char[] array = new char[b * 2];
+
+        for (int index = 0; index < mn; ++index) {
+            array[2 * index + 0] = hexArray[dataBytes[index + a] >>> 4 & 15];
+            array[2 * index + 1] = hexArray[dataBytes[index + a] >>> 0 & 15];
+        }
+
+        return new String(array);
+    }
+
     public static int major(byte[] scanRecord, int startByte) {
         return (scanRecord[startByte + 20] & 0xff) * 0x100 + (scanRecord[startByte + 21] & 0xff);
     }

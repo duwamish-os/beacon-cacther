@@ -2,7 +2,7 @@ package com.duwamish.radio.transmitter.layouts
 
 import android.bluetooth.BluetoothDevice
 import android.util.Log
-import com.duwamish.radio.transmitter.BeaconData
+import com.duwamish.radio.transmitter.Beacon
 import com.duwamish.radio.transmitter.Hex
 import java.time.LocalDateTime
 
@@ -14,7 +14,7 @@ public class IBeaconScanApi {
 
         fun scan(device: BluetoothDevice,
                  rssi: Int,
-                 scanRecord: ByteArray): BeaconData? {
+                 scanRecord: ByteArray): Beacon? {
             Log.i(LOG_TAG, "processing Ibeacon BLE")
 
             var startByte = 2
@@ -50,7 +50,7 @@ public class IBeaconScanApi {
 
                 Log.i(LOG_TAG, "UUID: $uuid, major: $major, minor: $minor, RSSI: $rssi, name: ${device.name}")
 
-                return BeaconData(uuid, major, minor, rssi, LocalDateTime.now())
+                return Beacon(uuid, major, minor, rssi, LocalDateTime.now())
             } else {
                 return null
             }

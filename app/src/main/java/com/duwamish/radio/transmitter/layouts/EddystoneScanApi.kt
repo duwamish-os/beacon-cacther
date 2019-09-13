@@ -1,8 +1,11 @@
 package com.duwamish.radio.transmitter.layouts
 
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.le.ScanResult
+import android.os.ParcelUuid
+import android.util.Base64
 import android.util.Log
-import com.duwamish.radio.transmitter.BeaconData
+import com.duwamish.radio.transmitter.Beacon
 import com.duwamish.radio.transmitter.Hex
 import java.time.LocalDateTime
 import java.util.*
@@ -12,36 +15,50 @@ public class EddystoneScanApi {
     companion object {
 
         val LOG_KEY = this.javaClass.name
+        private val EDDYSTONE_UUID = ParcelUuid.fromString("0000feaa-0000-1000-8000-00805f9b34fb")
 
         fun scan(device: BluetoothDevice,
                  rssi: Int,
-                 scanRecord: ByteArray): BeaconData? {
+                 bleResult: ScanResult): Beacon? {
 
             Log.i(LOG_KEY, "validating eddystone")
 
-            if(scanRecord == null) return null
+            if (bleResult == null) return null
 
-            for (startByte in 0 until scanRecord.size) {
-                if (scanRecord.size - startByte > 19) { // need at least 19 bytes for Eddystone-UID
-                    // Check that this has the right pattern needed for this to be Eddystone-UID
-                    if (Hex.isEddyV2(scanRecord, startByte)) {
-                        // This is an Eddystone-UID beacon.
-                        val namespaceIdentifierBytes = Arrays.copyOfRange(scanRecord, startByte + 4, startByte + 13)
-                        val instanceIdentifierBytes = Arrays.copyOfRange(scanRecord, startByte + 14, startByte + 19)
+            if (bleResult.scanRecord != null) {
+                val serviceUuids = bleResult.scanRecord.serviceUuids
+                val manufacturerData = bleResult.scanRecord.manufacturerSpecificData
+                val serviceData = bleResult.scanRecord.serviceData
+                val address = bleResult.device.address
 
-                        Log.i(LOG_KEY, "Eddystone found")
-                        return BeaconData(
-                                instanceIdentifierBytes.toString(),
-                                0,
-                                0,
-                                rssi,
-                                LocalDateTime.now()
-                        );
-                    } else {
-                        Log.i(LOG_KEY, "is not eddy")
+                if (serviceUuids != null && serviceUuids.contains(EDDYSTONE_UUID)) {
+                    Log.i(LOG_KEY, "Eddy")
+                    val namespaceMetadata: ByteArray? = serviceData.get(EDDYSTONE_UUID)
+
+                    if (namespaceMetadata != null) {
+                        when (namespaceMetadata.get(0).toInt()) {
+                            0 -> {
+                                val ns: String = "urn:feaa:uid:" + Base64.encodeToString(
+                                        Arrays.copyOfRange(namespaceMetadata, 2, 18), 2
+                                )
+                                val namespaceIndex = ns.lastIndexOf(58.toChar())
+                                if (namespaceIndex != -1) {
+                                    ns.substring(0, namespaceIndex + 1)
+                                    val ns1 = ns.substring(namespaceIndex + 1).split(";")[0]
+                                    val namespaceId = Hex.toHexString(Base64.decode(ns1, 2), 0, 10)
+
+                                    return Beacon(
+                                            namespaceId,
+                                            0,
+                                            0,
+                                            rssi,
+                                            LocalDateTime.now()
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
-
             }
 
             return null
