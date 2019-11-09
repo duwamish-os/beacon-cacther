@@ -2,7 +2,7 @@ package com.duwamish.radio.transmitter.layouts
 
 import android.bluetooth.BluetoothDevice
 import android.util.Log
-import com.duwamish.radio.transmitter.Beacon
+import com.duwamish.radio.transmitter.data.Beacon
 import com.duwamish.radio.transmitter.Hex
 import java.time.LocalDateTime
 
@@ -13,15 +13,16 @@ public class IBeaconScanApi {
         private val LOG_TAG = "IBeaconScanApi"
 
         fun scan(device: BluetoothDevice,
-                 rssi: Int,
-                 scanRecord: ByteArray): Beacon? {
+                 rsStrengthIndicator: Int,
+                 transmitPower: Int,
+                 scanBleRecord: ByteArray): Beacon? {
             Log.i(LOG_TAG, "processing Ibeacon BLE")
 
             var startByte = 2
             var patternFound = false
             while (startByte <= 5) {
-                if (scanRecord[startByte + 2].toInt() and 0xff == 0x02 && //Identifies an iBeacon
-                    scanRecord[startByte + 3].toInt() and 0xff == 0x15) { //Identifies correct data length
+                if (scanBleRecord[startByte + 2].toInt() and 0xff == 0x02 && //Identifies an iBeacon
+                    scanBleRecord[startByte + 3].toInt() and 0xff == 0x15) { //Identifies correct data length
 
                     patternFound = true
                     break
@@ -32,7 +33,7 @@ public class IBeaconScanApi {
             if (patternFound) {
                 //Convert to hex String
                 val uuidBytes = ByteArray(16)
-                System.arraycopy(scanRecord, startByte + 4, uuidBytes, 0, 16)
+                System.arraycopy(scanBleRecord, startByte + 4, uuidBytes, 0, 16)
                 val hexString = Hex.bytesToHex(uuidBytes)
 
                 //UUID detection
@@ -43,14 +44,22 @@ public class IBeaconScanApi {
                         hexString.substring(20, 32)
 
                 // major
-                val major = Hex.major(scanRecord, startByte)
+                val major = Hex.major(scanBleRecord, startByte)
 
                 // minor
-                val minor = Hex.minor(scanRecord, startByte)
+                val minor = Hex.minor(scanBleRecord, startByte)
 
-                Log.i(LOG_TAG, "UUID: $uuid, major: $major, minor: $minor, RSSI: $rssi, name: ${device.name}")
+                Log.i(LOG_TAG, "UUID: $uuid, major: $major, minor: $minor, RSSI: $rsStrengthIndicator, name: ${device.name}")
 
-                return Beacon(uuid, major, minor, rssi, LocalDateTime.now())
+                return Beacon(
+                        uuid,
+                        major,
+                        minor,
+                        rsStrengthIndicator,
+                        Math.pow(10.0, (transmitPower.toDouble() - rsStrengthIndicator) / (10 * 2)),
+                        LocalDateTime.now(), device,
+                        "Ibeacon"
+                )
             } else {
                 return null
             }

@@ -5,7 +5,7 @@ import android.bluetooth.le.ScanResult
 import android.os.ParcelUuid
 import android.util.Base64
 import android.util.Log
-import com.duwamish.radio.transmitter.Beacon
+import com.duwamish.radio.transmitter.data.Beacon
 import com.duwamish.radio.transmitter.Hex
 import java.time.LocalDateTime
 import java.util.*
@@ -21,7 +21,7 @@ public class EddystoneScanApi {
                  rssi: Int,
                  bleResult: ScanResult): Beacon? {
 
-            Log.i(LOG_KEY, "validating eddystone")
+            Log.i(LOG_KEY, "validating eddystone with scanResult ${bleResult.scanRecord}")
 
             if (bleResult == null) return null
 
@@ -52,7 +52,10 @@ public class EddystoneScanApi {
                                             0,
                                             0,
                                             rssi,
-                                            LocalDateTime.now()
+                                            Math.pow(10.0, (bleResult.txPower as Double - rssi) / (10 * 2)),
+                                            LocalDateTime.now(),
+                                            device,
+                                            "eddystone"
                                     )
                                 }
                             }

@@ -1,4 +1,4 @@
-package com.duwamish.radio.transmitter
+package com.duwamish.radio.transmitter.controller
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.altbeacon.beacon.*
 import android.bluetooth.BluetoothAdapter
 import android.util.Log
+import com.duwamish.radio.transmitter.R
 
 
 class BeaconCatcherController : AppCompatActivity(), BeaconConsumer {

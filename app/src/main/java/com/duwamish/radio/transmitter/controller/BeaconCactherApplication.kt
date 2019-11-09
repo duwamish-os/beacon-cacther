@@ -1,14 +1,14 @@
-package com.duwamish.radio.transmitter
+package com.duwamish.radio.transmitter.controller
 
 import android.app.Application
 import android.content.Intent
 import android.util.Log
 import org.altbeacon.beacon.Region
 import org.altbeacon.beacon.startup.BootstrapNotifier
-import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.startup.RegionBootstrap
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver
 
+@Deprecated("BeaconCatcherController is used instead")
 public class BeaconCactherApplication: Application(), BootstrapNotifier {
 
     private val LOG_KEY = this.javaClass.name

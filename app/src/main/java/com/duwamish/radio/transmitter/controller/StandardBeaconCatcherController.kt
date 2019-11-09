@@ -1,4 +1,4 @@
-package com.duwamish.radio.transmitter
+package com.duwamish.radio.transmitter.controller
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.ParcelUuid
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -21,9 +20,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.ArrayAdapter
 import com.duwamish.radio.transmitter.layouts.EddystoneScanApi
 import com.duwamish.radio.transmitter.layouts.IBeaconScanApi
-import java.util.*
 import kotlin.collections.HashMap
-import android.util.Base64
+import com.duwamish.radio.transmitter.data.Beacon
+import com.duwamish.radio.transmitter.R
 
 class StandardBeaconCatcherController : AppCompatActivity() {
 
@@ -80,9 +79,10 @@ class StandardBeaconCatcherController : AppCompatActivity() {
                 override fun onScanResult(callbackType: Int, result: ScanResult) {
                     Log.i(LOG_KEY, "found BLEs result $callbackType")
 
-                    val beacon = IBeaconScanApi.scan(
+                    val ibeacon = IBeaconScanApi.scan(
                             result.device,
                             result.rssi,
+                            result.txPower,
                             result.scanRecord.bytes
                     )
 
@@ -92,8 +92,8 @@ class StandardBeaconCatcherController : AppCompatActivity() {
                             result
                     )
 
-                    if (beacon != null) {
-                        beacons.put(beacon.uuid, beacon)
+                    if (ibeacon != null) {
+                        beacons.put(ibeacon.uuid, ibeacon)
                     }
 
                     if (eddystone != null) {
@@ -105,9 +105,11 @@ class StandardBeaconCatcherController : AppCompatActivity() {
                             android.R.layout.simple_list_item_1,
                             beacons.map { b ->
                                 "UUID: " + b.key + "\n" +
+                                "Layout: " + b.value.layout + "\n" +
                                         "Major: " + b.value.major + "\n" +
                                         "Minor: " + b.value.minor + "\n" +
-                                        "Rssi: " + b.value.rssi + "\n" +
+                                        "Signal Strength: " + b.value.rsStrengthIndicator + "\n" +
+                                        "Estimated Distance: " + b.value.estimatedDistance + " meters \n" +
                                         "Last Detected: " + b.value.lastDetected.toString() + "\n"
                             }
                     )

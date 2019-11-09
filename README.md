@@ -1,4 +1,8 @@
 
+- [1M Transmitted Power(TxPower)](https://stackoverflow.com/a/36867888/432903), aka measured power/ 1M expected power
+- Radio Signal Strength Indicator
+- [deciBel Milliwatts](https://en.wikipedia.org/wiki/DBm), https://support.kontakt.io/hc/en-gb/articles/201621521-Transmission-power-Range-and-RSSI
+
 Layouts
 ------
 
@@ -64,6 +68,14 @@ build artifact
 ```
 - https://developer.android.com/studio/build/building-cmdline
 
+
+TODOs
+-----
+
+- find device distance 
+- find user direction from beacon
+- UI to show beacons
+
 references
 ---
 
@@ -71,3 +83,6 @@ references
 - https://developer.radiusnetworks.com/2015/09/29/is-your-beacon-app-ready-for-android-6.html
 - https://github.com/Bridouille/android-beacon-scanner
 - https://github.com/TakahikoKawasaki/nv-bluetooth
+- http://cseweb.ucsd.edu/classes/fa06/cse237a/finalproj/almula.pdf
+- https://iotandelectronics.wordpress.com/2016/10/07/how-to-calculate-distance-from-the-rssi-value-of-the-ble-beacon/
+- https://www.quora.com/What-does-negative-numbers-on-the-decibel-scale-mean
