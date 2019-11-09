@@ -3,6 +3,8 @@
 - Radio Signal Strength Indicator
 - [deciBel Milliwatts](https://en.wikipedia.org/wiki/DBm), https://support.kontakt.io/hc/en-gb/articles/201621521-Transmission-power-Range-and-RSSI
 
+![](beacon_list.png)
+
 Layouts
 ------
 
