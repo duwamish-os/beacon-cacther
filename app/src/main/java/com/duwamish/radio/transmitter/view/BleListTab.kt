@@ -25,7 +25,12 @@ class BleListTab() : Fragment() {
 
         val cx = getContext()
         if ( cx != null) {
-            scanHandler.post(ScanState.scanThread(scanHandler, beaconsView, cx, ApplicationState.bluetoothAdapter))
+            scanHandler.post(
+                    ScanState.scanThread(scanHandler,
+                    beaconsView,
+                    cx,
+                    ApplicationState.bluetoothAdapter)
+            )
         }
 
         return view

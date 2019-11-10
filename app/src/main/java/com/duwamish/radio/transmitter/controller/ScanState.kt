@@ -85,7 +85,7 @@ class ScanState {
                         if (errorCode == 2) {
                             val builder = AlertDialog.Builder(context)
                             builder.setTitle("Error")
-                            builder.setMessage("Error scanning. Please reboot Bluetooth or device")
+                            builder.setMessage("Your Bluetooth is misbehaving. Please reboot Bluetooth or device.")
                             builder.setPositiveButton(android.R.string.ok, null)
                             builder.setOnDismissListener { }
                             builder.show()
