@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.TabLayout
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -16,6 +18,8 @@ import android.view.MenuItem
 import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_main.*
 import com.duwamish.radio.transmitter.R
+import com.duwamish.radio.transmitter.view.BleListTab
+import com.duwamish.radio.transmitter.view.BleTabView
 
 class StandardBeaconCatcherController : AppCompatActivity() {
 
@@ -26,13 +30,24 @@ class StandardBeaconCatcherController : AppCompatActivity() {
     private val scanHandler = Handler()
     private var PERMISSION_REQUEST_COARSE_LOCATION = 1
     private lateinit var beaconsView: ListView
+    private lateinit var bleTabView: BleTabView
+    private lateinit var tabLayout: TabLayout
+    private lateinit var viewPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+//        setSupportActionBar(toolbar)
 
-        beaconsView = findViewById<ListView>(R.id.beacons)
+//        beaconsView = findViewById<ListView>(R.id.beacons)
+        viewPager = findViewById<ViewPager>(R.id.viewPager)
+        tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        bleTabView = BleTabView(supportFragmentManager)
+        bleTabView.addFragment(BleListTab(), "list")
+        bleTabView.addFragment(BleListTab(), "radar")
+
+        viewPager.adapter = bleTabView
+        tabLayout.setupWithViewPager(viewPager)
 
         val alertDialog = AlertDialog.Builder(this)
         val locationGranted =
@@ -59,7 +74,7 @@ class StandardBeaconCatcherController : AppCompatActivity() {
             bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
             bluetoothAdapter = bluetoothManager.adapter
 
-            scanHandler.post(ScanState.scanThread(scanHandler, beaconsView, this, bluetoothAdapter))
+//            scanHandler.post(ScanState.scanThread(scanHandler, beaconsView, this, bluetoothAdapter))
         }
     }
 
