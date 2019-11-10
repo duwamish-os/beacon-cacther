@@ -14,14 +14,17 @@ public class EddystoneScanApi {
 
     companion object {
 
-        val LOG_KEY = this.javaClass.name
+        private val PROTOCAL = "eddystone"
+
+        private val LOG_KEY = this.javaClass.name
         private val EDDYSTONE_UUID = ParcelUuid.fromString("0000feaa-0000-1000-8000-00805f9b34fb")
 
         fun scan(device: BluetoothDevice,
                  rssi: Int,
+                 transmittedPower: Int,
                  bleResult: ScanResult): Beacon? {
 
-            Log.i(LOG_KEY, "validating eddystone with scanResult ${bleResult.scanRecord}")
+            Log.i(LOG_KEY, "validating if eddystone for scanResult ${bleResult.scanRecord}")
 
             if (bleResult == null) return null
 
@@ -32,7 +35,7 @@ public class EddystoneScanApi {
                 val address = bleResult.device.address
 
                 if (serviceUuids != null && serviceUuids.contains(EDDYSTONE_UUID)) {
-                    Log.i(LOG_KEY, "Eddy")
+                    Log.i(LOG_KEY, "Eddystone found: ${serviceUuids}")
                     val namespaceMetadata: ByteArray? = serviceData.get(EDDYSTONE_UUID)
 
                     if (namespaceMetadata != null) {
@@ -52,10 +55,11 @@ public class EddystoneScanApi {
                                             0,
                                             0,
                                             rssi,
-                                            Math.pow(10.0, (bleResult.txPower as Double - rssi) / (10 * 2)),
+                                            transmittedPower,
+                                            Math.pow(10.0, (transmittedPower.toDouble() - rssi) / (10 * 2)),
                                             LocalDateTime.now(),
                                             device,
-                                            "eddystone"
+                                            PROTOCAL
                                     )
                                 }
                             }

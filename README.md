@@ -5,6 +5,13 @@
 
 ![](beacon_list.png)
 
+BLE Range (txPower)
+--
+
+Choosing a transmit power level is a design tradeoff between range and power consumption.
+
+https://www.bluetooth.com/bluetooth-technology/range/?utm_source=tw&utm_medium=social&utm_term=social&utm_content=tw-btrange-org&utm_campaign=range
+
 Layouts
 ------
 
@@ -68,6 +75,7 @@ build artifact
 ```bash
 ./gradlew clean ##make sure to run before installing in device
 ```
+
 - https://developer.android.com/studio/build/building-cmdline
 
 
@@ -88,3 +96,7 @@ references
 - http://cseweb.ucsd.edu/classes/fa06/cse237a/finalproj/almula.pdf
 - https://iotandelectronics.wordpress.com/2016/10/07/how-to-calculate-distance-from-the-rssi-value-of-the-ble-beacon/
 - https://www.quora.com/What-does-negative-numbers-on-the-decibel-scale-mean
+
+- https://stackoverflow.com/questions/20332856/triangulate-example-for-ibeacons
+- https://www.bluetooth.com/bluetooth-resources/enhancing-bluetooth-location-services-with-direction-finding/
+- https://3pl46c46ctx02p7rzdsvsg21-wpengine.netdna-ssl.com/wp-content/uploads/2019/03/1901_Enhancing-Bluetooth-Location-Service_FINAL.pdf

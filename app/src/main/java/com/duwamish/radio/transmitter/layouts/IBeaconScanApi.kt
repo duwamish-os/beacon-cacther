@@ -10,30 +10,33 @@ public class IBeaconScanApi {
 
     companion object {
 
+        private val PROTOCAL = "Ibeacon"
+
         private val LOG_TAG = "IBeaconScanApi"
 
         fun scan(device: BluetoothDevice,
                  rsStrengthIndicator: Int,
                  transmitPower: Int,
                  scanBleRecord: ByteArray): Beacon? {
-            Log.i(LOG_TAG, "processing Ibeacon BLE")
+            Log.i(LOG_TAG, "validating if Ibeacon BLE for ${scanBleRecord}")
 
             var startByte = 2
-            var patternFound = false
+            var iBeaconPatternFound = false
             while (startByte <= 5) {
                 if (scanBleRecord[startByte + 2].toInt() and 0xff == 0x02 && //Identifies an iBeacon
                     scanBleRecord[startByte + 3].toInt() and 0xff == 0x15) { //Identifies correct data length
 
-                    patternFound = true
+                    iBeaconPatternFound = true
                     break
                 }
                 startByte++
             }
 
-            if (patternFound) {
+            if (iBeaconPatternFound) {
                 //Convert to hex String
                 val uuidBytes = ByteArray(16)
                 System.arraycopy(scanBleRecord, startByte + 4, uuidBytes, 0, 16)
+
                 val hexString = Hex.bytesToHex(uuidBytes)
 
                 //UUID detection
@@ -56,9 +59,11 @@ public class IBeaconScanApi {
                         major,
                         minor,
                         rsStrengthIndicator,
+                        transmitPower,
                         Math.pow(10.0, (transmitPower.toDouble() - rsStrengthIndicator) / (10 * 2)),
-                        LocalDateTime.now(), device,
-                        "Ibeacon"
+                        LocalDateTime.now(),
+                        device,
+                        PROTOCAL
                 )
             } else {
                 return null
