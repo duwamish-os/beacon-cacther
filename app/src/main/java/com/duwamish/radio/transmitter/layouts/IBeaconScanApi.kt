@@ -60,7 +60,6 @@ public class IBeaconScanApi {
                         minor,
                         rsStrengthIndicator,
                         transmitPower,
-                        Math.pow(10.0, (transmitPower.toDouble() - rsStrengthIndicator) / (10 * 2)),
                         LocalDateTime.now(),
                         device,
                         PROTOCAL

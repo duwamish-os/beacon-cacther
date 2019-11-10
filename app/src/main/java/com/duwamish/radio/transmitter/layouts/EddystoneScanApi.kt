@@ -20,7 +20,7 @@ public class EddystoneScanApi {
         private val EDDYSTONE_UUID = ParcelUuid.fromString("0000feaa-0000-1000-8000-00805f9b34fb")
 
         fun scan(device: BluetoothDevice,
-                 rssi: Int,
+                 signalStrength: Int,
                  transmittedPower: Int,
                  bleResult: ScanResult): Beacon? {
 
@@ -54,9 +54,8 @@ public class EddystoneScanApi {
                                             namespaceId,
                                             0,
                                             0,
-                                            rssi,
+                                            signalStrength,
                                             transmittedPower,
-                                            Math.pow(10.0, (transmittedPower.toDouble() - rssi) / (10 * 2)),
                                             LocalDateTime.now(),
                                             device,
                                             PROTOCAL

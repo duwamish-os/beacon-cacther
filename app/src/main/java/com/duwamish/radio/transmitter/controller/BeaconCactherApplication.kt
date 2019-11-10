@@ -19,7 +19,7 @@ public class BeaconCactherApplication: Application(), BootstrapNotifier {
     override fun onCreate() {
         super.onCreate()
 
-        Log.i(LOG_KEY, "bootsrap notifier")
+        Log.i(LOG_KEY, "bootstrap notifier")
 
         val beaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(this)
         val region = Region("backgroundRegion", null, null, null)

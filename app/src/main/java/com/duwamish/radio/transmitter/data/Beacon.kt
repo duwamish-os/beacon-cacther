@@ -8,8 +8,17 @@ data class Beacon(val uuid: String,
                   val minor: Int,
                   val rsStrengthIndicator: Int,
                   val measuredPower: Int,
-                  val estimatedDistance: Double,
                   val lastDetected: LocalDateTime,
                   val underlyingDevice: BluetoothDevice,
-                  val layout: String
-)
+                  val protocol: String
+) {
+
+    /**
+     * https://github.com/AltBeacon/android-beacon-library/blob/master/lib/src/main/java/org/altbeacon/beacon/distance/CurveFittedDistanceCalculator.java#L60
+     */
+    fun estimatedDistance(): Double {
+        val n = 2
+        val ratio = (measuredPower.toDouble() - rsStrengthIndicator) / (10 * n)
+        return Math.pow(10.0, ratio)
+    }
+}

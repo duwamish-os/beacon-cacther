@@ -3,7 +3,7 @@
 - Radio Signal Strength Indicator
 - [deciBel Milliwatts](https://en.wikipedia.org/wiki/DBm), https://support.kontakt.io/hc/en-gb/articles/201621521-Transmission-power-Range-and-RSSI
 
-![](beacon_list.png)
+<img src="beacon_list.png" width="25%"/>
 
 BLE Range (txPower)
 --
@@ -100,3 +100,7 @@ references
 - https://stackoverflow.com/questions/20332856/triangulate-example-for-ibeacons
 - https://www.bluetooth.com/bluetooth-resources/enhancing-bluetooth-location-services-with-direction-finding/
 - https://3pl46c46ctx02p7rzdsvsg21-wpengine.netdna-ssl.com/wp-content/uploads/2019/03/1901_Enhancing-Bluetooth-Location-Service_FINAL.pdf
+
+use cases
+---------
+- https://runwaygirlnetwork.com/2014/06/18/american-turns-beacons-improve-passenger-experience/
