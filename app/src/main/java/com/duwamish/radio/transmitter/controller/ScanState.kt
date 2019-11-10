@@ -1,6 +1,5 @@
 package com.duwamish.radio.transmitter.controller
 
-import android.R
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -60,7 +59,7 @@ class ScanState {
 
                         val beaconsViewAdaptor = ArrayAdapter<String>(
                                 context,
-                                R.layout.simple_list_item_1,
+                                android.R.layout.simple_list_item_1,
                                 beacons.map { b ->
                                     "UUID: " + b.key + "\n" +
                                             "Protocol: " + b.value.protocol + "\n" +

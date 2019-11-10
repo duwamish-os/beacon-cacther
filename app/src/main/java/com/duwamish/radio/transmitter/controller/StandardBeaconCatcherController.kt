@@ -1,13 +1,11 @@
 package com.duwamish.radio.transmitter.controller
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
@@ -15,11 +13,10 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ListView
-import kotlinx.android.synthetic.main.activity_main.*
 import com.duwamish.radio.transmitter.R
 import com.duwamish.radio.transmitter.state.ApplicationState
 import com.duwamish.radio.transmitter.view.BleListTab
+import com.duwamish.radio.transmitter.view.BleRadarTab
 import com.duwamish.radio.transmitter.view.BleTabView
 
 class StandardBeaconCatcherController : AppCompatActivity() {
@@ -35,7 +32,6 @@ class StandardBeaconCatcherController : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        setSupportActionBar(toolbar)
 
         viewPager = findViewById<ViewPager>(R.id.viewPager)
         tabLayout = findViewById<TabLayout>(R.id.tabLayout)
@@ -59,21 +55,23 @@ class StandardBeaconCatcherController : AppCompatActivity() {
 
             alertDialog.show()
 
-            ApplicationState.bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            ApplicationState.bluetoothAdapter = ApplicationState.bluetoothManager.adapter
-
+            setupBLE()
             renderTab()
 
         } else {
-            ApplicationState.bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            ApplicationState.bluetoothAdapter = ApplicationState.bluetoothManager.adapter
+            setupBLE()
             renderTab()
         }
     }
 
+    private fun setupBLE() {
+        ApplicationState.bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        ApplicationState.bluetoothAdapter = ApplicationState.bluetoothManager.adapter
+    }
+
     private fun renderTab() {
         bleTabView.addFragment(BleListTab(), "list")
-        bleTabView.addFragment(BleListTab(), "radar")
+        bleTabView.addFragment(BleRadarTab(), "radar")
 
         viewPager.adapter = bleTabView
         tabLayout.setupWithViewPager(viewPager)
