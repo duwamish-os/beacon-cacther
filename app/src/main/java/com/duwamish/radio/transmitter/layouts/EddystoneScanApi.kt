@@ -18,6 +18,28 @@ public class EddystoneScanApi {
 
         private val LOG_KEY = this.javaClass.name
         private val EDDYSTONE_UUID = ParcelUuid.fromString("0000feaa-0000-1000-8000-00805f9b34fb")
+        private val UID_BYTE_VALUE = 0
+
+        /**
+         * https://support.kontakt.io/hc/en-gb/articles/201621521-Transmission-power-Range-and-RSSI
+         */
+        private val RSSI_TO_MEASURED_POWER = linkedMapOf<Int, Int>(
+                -99 to -85,
+                -23 to -85,
+                -21 to -81,
+                -18 to -78,
+                -15 to -76,
+                -12 to -74,
+                -9 to -69,
+                -6 to -67,
+                -3 to -64,
+                0 to -62,
+                1 to -61,
+                2 to -61,
+                4 to -60,
+                5 to -58,
+                99 to -58
+        )
 
         fun scan(device: BluetoothDevice,
                  signalStrength: Int,
@@ -37,10 +59,12 @@ public class EddystoneScanApi {
                 if (serviceUuids != null && serviceUuids.contains(EDDYSTONE_UUID)) {
                     Log.i(LOG_KEY, "Eddystone found: ${serviceUuids}")
                     val namespaceMetadata: ByteArray? = serviceData.get(EDDYSTONE_UUID)
+                    Log.i(LOG_KEY, "Eddystone namespace: ${namespaceMetadata}")
 
                     if (namespaceMetadata != null) {
-                        when (namespaceMetadata.get(0).toInt()) {
-                            0 -> {
+                        val firstByte = namespaceMetadata.get(0).toInt()
+                        when (firstByte) {
+                            UID_BYTE_VALUE -> {
                                 val ns: String = "urn:feaa:uid:" + Base64.encodeToString(
                                         Arrays.copyOfRange(namespaceMetadata, 2, 18), 2
                                 )
@@ -55,7 +79,7 @@ public class EddystoneScanApi {
                                             0,
                                             0,
                                             signalStrength,
-                                            transmittedPower,
+                                            getMeasuredPower(signalStrength, transmittedPower),
                                             LocalDateTime.now(),
                                             device,
                                             PROTOCAL
@@ -68,6 +92,21 @@ public class EddystoneScanApi {
             }
 
             return null
+        }
+
+        fun getMeasuredPower(signalStrenghth: Int, measuredPower: Int): Int {
+            var found = false
+            var measuredPower: Int = -62
+
+            RSSI_TO_MEASURED_POWER.entries.forEach { entry ->
+                if (!found && signalStrenghth > entry.key) {
+                    measuredPower = entry.value
+                    found = true
+                }
+            }
+
+            Log.i(LOG_KEY, "strength " + signalStrenghth + " : " + measuredPower)
+            return measuredPower
         }
     }
 }
