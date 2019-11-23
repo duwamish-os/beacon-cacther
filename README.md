@@ -115,6 +115,8 @@ references
 - https://www.bluetooth.com/bluetooth-resources/enhancing-bluetooth-location-services-with-direction-finding/
 - https://3pl46c46ctx02p7rzdsvsg21-wpengine.netdna-ssl.com/wp-content/uploads/2019/03/1901_Enhancing-Bluetooth-Location-Service_FINAL.pdf
 
+- https://accent-systems.com/wp-content/uploads/iBKS105_datasheet_rev1.pdf
+
 use cases
 ---------
 - https://runwaygirlnetwork.com/2014/06/18/american-turns-beacons-improve-passenger-experience/

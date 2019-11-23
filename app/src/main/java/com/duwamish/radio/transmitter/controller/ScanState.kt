@@ -66,7 +66,7 @@ class ScanState {
                                             "Major: " + b.value.major + " / " + "Minor: " + b.value.minor + "\n" +
                                             "1m Transmitted Power: " + b.value.measuredPower + " dBMW \n" +
                                             "Signal Strength: " + b.value.rsStrengthIndicator + " dBMW \n" +
-                                            "Estimated Distance: " + b.value.estimatedDistance() + " m \n" +
+                                            "Estimated Distance: " + b.value.estimatedDistanceV2() + " m \n" +
                                             "Last Detected: " + b.value.lastDetected.toString() + "\n"
                                 }
                         )

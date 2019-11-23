@@ -74,27 +74,32 @@ public class EddystoneScanApi {
                         when (firstByte) {
                             UID_FRAME_TYPE -> {
                                 val measuredPowerAt_0_m = namespaceMetadata.get(1).toInt()
-                                val ns: String = "urn:feaa:uid:" + Base64.encodeToString(
+                                val ns: String = Base64.encodeToString(
                                         Arrays.copyOfRange(namespaceMetadata, 2, 18), 2
                                 )
 
-                                val namespaceIndex = ns.lastIndexOf(58.toChar())
-                                if (namespaceIndex != -1) {
-                                    ns.substring(0, namespaceIndex + 1)
-                                    val ns1 = ns.substring(namespaceIndex + 1).split(";")[0]
-                                    val namespaceId_10_bytes = Hex.toHexString(Base64.decode(ns1, 2), 0, 10)
+//                                val namespaceIndex = ns.lastIndexOf(58.toChar())
+//                                if (namespaceIndex != -1) {
+//                                    ns.substring(0, namespaceIndex + 1)
+//                                    val ns1 = ns.substring(namespaceIndex + 1).split(";")[0]
+                                val namespaceId_10_bytes2 = Hex.toHexString(Base64.decode(ns, 2), 0, 10)
+                                //F86410C4C588A9CEC5F100 90
+                                val namespaceId_10_bytes =
+                                        Hex.toHexStringv3(Hex.copyOfRange(namespaceMetadata, 4, 13), true)
+                                val instanceId_6_bytes = Hex.toHexStringv3(Hex.copyOfRange(namespaceMetadata, 13, 18), true)
 
-                                    return Beacon(
-                                            namespaceId_10_bytes,
-                                            0,
-                                            0,
-                                            signalStrength,
-                                            measuredPowerAt_0_m - 41,
-                                            LocalDateTime.now(),
-                                            device,
-                                            PROTOCAL
-                                    )
-                                }
+                                Log.i(LOG_KEY, namespaceId_10_bytes)
+                                return Beacon(
+                                        namespaceId_10_bytes + ":" + instanceId_6_bytes,
+                                        0,
+                                        0,
+                                        signalStrength,
+                                        measuredPowerAt_0_m - 41,
+                                        LocalDateTime.now(),
+                                        device,
+                                        PROTOCAL
+                                )
+//                                }
                             }
                         }
                     }

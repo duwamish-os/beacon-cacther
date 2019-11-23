@@ -4,14 +4,15 @@ public class Hex {
     /**
      * bytesToHex method
      */
-    private static final char[] hexArray = "0123456789ABCDEF".toCharArray();
+    private static final char[] hexArray_UPPERCASE = "0123456789ABCDEF".toCharArray();
+    private static final char[] hexArray_LOWERCASE = "0123456789abcdef".toCharArray();
 
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+            hexChars[j * 2] = hexArray_UPPERCASE[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray_UPPERCASE[v & 0x0F];
         }
         return new String(hexChars);
     }
@@ -21,11 +22,27 @@ public class Hex {
         char[] array = new char[b * 2];
 
         for (int index = 0; index < mn; ++index) {
-            array[2 * index + 0] = hexArray[dataBytes[index + a] >>> 4 & 15];
-            array[2 * index + 1] = hexArray[dataBytes[index + a] >>> 0 & 15];
+            array[2 * index + 0] = hexArray_UPPERCASE[dataBytes[index + a] >>> 4 & 15];
+            array[2 * index + 1] = hexArray_UPPERCASE[dataBytes[index + a] >>> 0 & 15];
         }
 
         return new String(array);
+    }
+
+    public static String toHexStringv3(byte[] data, boolean upper) {
+        if (data == null) {
+            return null;
+        }
+
+        char[] table = (upper ? hexArray_UPPERCASE : hexArray_LOWERCASE);
+        char[] chars = new char[data.length * 2];
+
+        for (int i = 0; i < data.length; ++i) {
+            chars[i * 2    ] = table[ (data[i] & 0xF0) >> 4 ];
+            chars[i * 2 + 1] = table[ (data[i] & 0x0F)      ];
+        }
+
+        return new String(chars);
     }
 
     public static int major(byte[] scanRecord, int startByte) {
@@ -48,5 +65,27 @@ public class Hex {
         return (scanRecord[startByte + 0] == 0xaa &&
                 scanRecord[startByte + 1] == 0xfe &&
                 scanRecord[startByte + 2] == 0x00);
+    }
+
+    public static byte[] copyOfRange(byte[] source, int from, int to) {
+        if (source == null || from < 0 || to < 0) {
+            return null;
+        }
+
+        int length = to - from;
+
+        if (length < 0) {
+            return null;
+        }
+
+        if (source.length < from + length) {
+            return null;
+        }
+
+        byte[] destination = new byte[length];
+
+        System.arraycopy(source, from, destination, 0, length);
+
+        return destination;
     }
 }
