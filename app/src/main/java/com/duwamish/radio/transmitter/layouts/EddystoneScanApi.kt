@@ -10,6 +10,14 @@ import com.duwamish.radio.transmitter.Hex
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * https://github.com/google/eddystone/tree/master/eddystone-uid
+ *
+ * Note to developers: the best way to determine the precise value to put into this field is to
+ * measure the actual output of your beacon from 1 meter away and then add 41 dBm to that.
+ *
+ * 41dBm is the signal loss that occurs over 1 meter.
+ */
 public class EddystoneScanApi {
 
     companion object {
@@ -18,7 +26,7 @@ public class EddystoneScanApi {
 
         private val LOG_KEY = this.javaClass.name
         private val EDDYSTONE_UUID = ParcelUuid.fromString("0000feaa-0000-1000-8000-00805f9b34fb")
-        private val UID_BYTE_VALUE = 0
+        private val UID_FRAME_TYPE = 0
 
         /**
          * https://support.kontakt.io/hc/en-gb/articles/201621521-Transmission-power-Range-and-RSSI
@@ -57,29 +65,31 @@ public class EddystoneScanApi {
                 val address = bleResult.device.address
 
                 if (serviceUuids != null && serviceUuids.contains(EDDYSTONE_UUID)) {
-                    Log.i(LOG_KEY, "Eddystone found: ${serviceUuids}")
+                    Log.i(LOG_KEY, "Eddystone found: ${serviceUuids} which is always same")
                     val namespaceMetadata: ByteArray? = serviceData.get(EDDYSTONE_UUID)
                     Log.i(LOG_KEY, "Eddystone namespace: ${namespaceMetadata}")
 
                     if (namespaceMetadata != null) {
                         val firstByte = namespaceMetadata.get(0).toInt()
                         when (firstByte) {
-                            UID_BYTE_VALUE -> {
+                            UID_FRAME_TYPE -> {
+                                val measuredPowerAt_0_m = namespaceMetadata.get(1).toInt()
                                 val ns: String = "urn:feaa:uid:" + Base64.encodeToString(
                                         Arrays.copyOfRange(namespaceMetadata, 2, 18), 2
                                 )
+
                                 val namespaceIndex = ns.lastIndexOf(58.toChar())
                                 if (namespaceIndex != -1) {
                                     ns.substring(0, namespaceIndex + 1)
                                     val ns1 = ns.substring(namespaceIndex + 1).split(";")[0]
-                                    val namespaceId = Hex.toHexString(Base64.decode(ns1, 2), 0, 10)
+                                    val namespaceId_10_bytes = Hex.toHexString(Base64.decode(ns1, 2), 0, 10)
 
                                     return Beacon(
-                                            namespaceId,
+                                            namespaceId_10_bytes,
                                             0,
                                             0,
                                             signalStrength,
-                                            getMeasuredPower(signalStrength, transmittedPower),
+                                            measuredPowerAt_0_m - 41,
                                             LocalDateTime.now(),
                                             device,
                                             PROTOCAL

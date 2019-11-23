@@ -24,7 +24,22 @@ m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24
 https://beaconlayout.wordpress.com
 
 * [eddystone](https://developers.google.com/beacons/eddystone)
-- https://github.com/google/eddystone/tree/master/eddystone-uid
+- [https://github.com/google/eddystone/tree/master/eddystone-uid](https://github.com/google/eddystone/tree/master/eddystone-uid)
+
+eg.
+
+```bash
+2019-11-22 20:28:53.777 18017-18017/com.duwamish.radio.transmitter I/com.duwamish.radio.transmitter.layouts.EddystoneScanApi$Companion: validating if eddystone for scanResult ScanRecord 
+[
+    mAdvertiseFlags=6, 
+    mServiceUuids=[0000feaa-0000-1000-8000-00805f9b34fb], 
+    mServiceSolicitationUuids=[], 
+    mManufacturerSpecificData={}, 
+    mServiceData={0000feaa-0000-1000-8000-00805f9b34fb=[0, -58, -8, 100, 16, -60, -59, -120, -87, -50, -59, -15, 0, -112, 0, 1, 21, 35, 0, 0]}, 
+    mTxPowerLevel=-2147483648, 
+    mDeviceName=null
+]
+```
 
 FIXME
 ----
@@ -52,7 +67,6 @@ FIXME
 2019-09-07 15:27:09.294 14718-14718/com.duwamish.radio.transmitter I/zygote:     at void com.android.internal.os.ZygoteInit.main(java.lang.String[]) (ZygoteInit.java:807)
 2019-09-07 15:27:09.294 14718-14718/com.duwamish.radio.transmitter I/zygote: Caused by: java.lang.ClassNotFoundException: Didn't find class "android.view.View$OnUnhandledKeyEventListener" on path: DexPathList[[zip file "/data/app/com.duwamish.radio.transmitter-FtcoIOHH2kvjqqHIpQiWGw==/base.apk", zip file "/data/app/com.duwamish.radio.transmitter-FtcoIOHH2kvjqqHIpQiWGw==/split_lib_dependencies_apk.apk", zip file "/data/app/com.duwamish.radio.transmitter-FtcoIOHH2kvjqqHIpQiWGw==/split_lib_resources_apk.apk", zip file "/data/app/com.duwamish.radio.transmitter-FtcoIOHH2kvjqqHIpQiWGw==/split_lib_slice_0_apk.apk", zip file "/data/app/com.duwamish.radio.transmitter-FtcoIOHH2kvjqqHIpQiWGw==/split_lib_slice_1_apk.apk", zip file "/data/app/com.duwamish.radio.transmitter-FtcoIOHH2kvjqqHIpQiWGw==/split_lib_slice_2_apk.apk", zip file "/data/app/com.duwamish.radio.transmitter-FtcoIOHH2kvjqqHIpQiWGw==/split_lib_slice_3_apk.apk", zip file "/data/app/com.duwamish.radio.transmitter-FtcoIOHH2kvjqqHIpQiWGw==/split_lib_slice_4_apk.apk", zip file "/data/app/com.duwamish.radio.transmitter-FtcoIOHH2kvjqqHIp
 2019-09-07 15:27:09.295 14718-14718/com.duwamish.radio.transmitter I/zygote:     at java.lang.Class dalvik.system.BaseDexClassLoader.findClass(java.lang.String) (BaseDexClassLoader.java:125)
-
 ```
 
 run on device
