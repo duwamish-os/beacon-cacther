@@ -4,26 +4,26 @@ public class Hex {
     /**
      * bytesToHex method
      */
-    private static final char[] hexArray_UPPERCASE = "0123456789ABCDEF".toCharArray();
-    private static final char[] hexArray_LOWERCASE = "0123456789abcdef".toCharArray();
+    private static final char[] HEX_ARRAY_UPPERCASE = "0123456789ABCDEF".toCharArray();
+    private static final char[] HEX_ARRAY_LOWERCASE = "0123456789abcdef".toCharArray();
 
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray_UPPERCASE[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray_UPPERCASE[v & 0x0F];
+            hexChars[j * 2] = HEX_ARRAY_UPPERCASE[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY_UPPERCASE[v & 0x0F];
         }
         return new String(hexChars);
     }
 
-    public static String toHexString(byte[] dataBytes, int a, int b) {
-        int mn = Math.min(dataBytes.length - a, b);
-        char[] array = new char[b * 2];
+    public static String toHexString(byte[] dataBytes, int from, int to) {
+        int mn = Math.min(dataBytes.length - from, to);
+        char[] array = new char[to * 2];
 
         for (int index = 0; index < mn; ++index) {
-            array[2 * index + 0] = hexArray_UPPERCASE[dataBytes[index + a] >>> 4 & 15];
-            array[2 * index + 1] = hexArray_UPPERCASE[dataBytes[index + a] >>> 0 & 15];
+            array[2 * index + 0] = HEX_ARRAY_UPPERCASE[dataBytes[index + from] >>> 4 & 15];
+            array[2 * index + 1] = HEX_ARRAY_UPPERCASE[dataBytes[index + from] >>> 0 & 15];
         }
 
         return new String(array);
@@ -34,7 +34,7 @@ public class Hex {
             return null;
         }
 
-        char[] table = (upper ? hexArray_UPPERCASE : hexArray_LOWERCASE);
+        char[] table = (upper ? HEX_ARRAY_UPPERCASE : HEX_ARRAY_LOWERCASE);
         char[] chars = new char[data.length * 2];
 
         for (int i = 0; i < data.length; ++i) {
@@ -45,12 +45,8 @@ public class Hex {
         return new String(chars);
     }
 
-    public static int major(byte[] scanRecord, int startByte) {
-        return (scanRecord[startByte + 20] & 0xff) * 0x100 + (scanRecord[startByte + 21] & 0xff);
-    }
-
-    public static int minor(byte[] scanRecord, int startByte) {
-        return (scanRecord[startByte + 22] & 0xff) * 0x100 + (scanRecord[startByte + 23] & 0xff);
+    public static int extract(byte[] byteString, int from, int to) {
+        return (byteString[from] & 0xff) * 0x100 + (byteString[to] & 0xff);
     }
 
     public static boolean isEddy(byte[] advertisementPacket) {

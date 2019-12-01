@@ -16,14 +16,36 @@ Layouts
 ------
 
 * [iBeacon](https://developer.apple.com/ibeacon/)
+----
+
+- http://www.havlena.net/en/location-technologies/ibeacons-how-do-they-technically-work/
+- https://support.kontakt.io/hc/en-gb/articles/201492492-iBeacon-advertising-packet-structure
 
 ```bash
 m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24
 ```
 
+23 bytes
+
+```bash
+2019-12-01 11:57:30.830 1055-1055/com.duwamish.radio.transmitter I/IBeaconScanApi: validated Ibeacon BLE for ScanRecord 
+[
+    mAdvertiseFlags=6, 
+    mServiceUuids=null, 
+    mServiceSolicitationUuids=[], 
+    mManufacturerSpecificData={76=[2, 21, -31, -11, 78, 2, 30, 35, 68, -32, -100, 61, 81, 46, -75, 106, -34, -55, 0, 100, 0, 100, -71]}, 
+    mServiceData={}, 
+    mTxPowerLevel=-2147483648, 
+    mDeviceName=null
+]
+
+```
+
 https://beaconlayout.wordpress.com
 
 * [eddystone](https://developers.google.com/beacons/eddystone)
+----
+
 - [https://github.com/google/eddystone/tree/master/eddystone-uid](https://github.com/google/eddystone/tree/master/eddystone-uid)
 
 eg.
@@ -34,7 +56,7 @@ eg.
     mAdvertiseFlags=6, 
     mServiceUuids=[0000feaa-0000-1000-8000-00805f9b34fb], 
     mServiceSolicitationUuids=[], 
-    mManufacturerSpecificData={}, 
+    mManufacturerSpecificData={},
     mServiceData={0000feaa-0000-1000-8000-00805f9b34fb=[0, -58, -8, 100, 16, -60, -59, -120, -87, -50, -59, -15, 0, -112, 0, 1, 21, 35, 0, 0]}, 
     mTxPowerLevel=-2147483648, 
     mDeviceName=null
@@ -116,6 +138,7 @@ references
 - https://3pl46c46ctx02p7rzdsvsg21-wpengine.netdna-ssl.com/wp-content/uploads/2019/03/1901_Enhancing-Bluetooth-Location-Service_FINAL.pdf
 
 - https://accent-systems.com/wp-content/uploads/iBKS105_datasheet_rev1.pdf
+- [Understanding ibeacon distancing](https://stackoverflow.com/a/21617601/432903)
 
 use cases
 ---------

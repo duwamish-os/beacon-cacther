@@ -6,8 +6,8 @@ import java.math.RoundingMode
 import java.time.LocalDateTime
 
 data class Beacon(val uuid: String,
-                  val major: Int,
-                  val minor: Int,
+                  val majorGroup: Int,
+                  val minorId: Int,
                   val rsStrengthIndicator: Int,
                   val measuredPower: Int,
                   val lastDetected: LocalDateTime,
@@ -22,7 +22,7 @@ data class Beacon(val uuid: String,
      */
     fun estimatedDistance(): Double {
         val pathLossParam = 2
-        val ratio = (measuredPower.toDouble() - rsStrengthIndicator) / (10 * pathLossParam)
+        val ratio = (measuredPower * 1.0 - rsStrengthIndicator) / (10 * pathLossParam) //
         val ed = Math.pow(10.0, ratio)
 
         return trimmedDistance(ed)
@@ -39,14 +39,37 @@ data class Beacon(val uuid: String,
     fun estimatedDistanceV2(): Double {
         val x = 0.42093;
         val y = 6.9476;
-        val z = 0.549;
+        val z = 0.54992;
 
         val ratio = (rsStrengthIndicator * 1.0) / measuredPower
 
         if (ratio < 1.0) {
             return trimmedDistance(Math.pow(10.0, ratio));
         } else {
-            return trimmedDistance((x) * Math.pow(ratio, y) + z)
+            return trimmedDistance((x * Math.pow(ratio, y)) + z)
+        }
+    }
+
+    override fun toString(): String {
+        if (protocol == "Ibeacon") {
+            val info = "Prox UID: " + uuid + "\n" +
+                    "Protocol: " + protocol + "\n" +
+                    "Major: " + majorGroup + " / " + "Minor: " + minorId + "\n" +
+                    "1m Transmitted Power: " + measuredPower + " dBMW \n" +
+                    "Signal Strength: " + rsStrengthIndicator + " dBMW \n" +
+                    "Estimated Distance: " + estimatedDistance() + " m \n" +
+//                    "Estimated Distance v2: " + estimatedDistanceV2() + " m \n" +
+                    "Last Detected: " + lastDetected.toString() + "\n"
+            return info
+        } else {
+            val info = "Prox UUID: " + uuid + "\n" +
+                    "Protocol: " + protocol + "\n" +
+                    "1m Transmitted Power: " + measuredPower + " dBMW \n" +
+                    "Signal Strength: " + rsStrengthIndicator + " dBMW \n" +
+                    "Estimated Distance: " + estimatedDistance() + " m \n" +
+//                   "Estimated Distance v2: " + estimatedDistanceV2() + " m \n" +
+                    "Last Detected: " + lastDetected.toString() + "\n"
+            return info
         }
     }
 }

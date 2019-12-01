@@ -71,9 +71,9 @@ class StandardBeaconCatcherController : AppCompatActivity() {
     }
 
     private fun renderTab() {
-        bleTabView.addFragment(BleListTab(), "list")
-        bleTabView.addFragment(BleRadarTab(), "radar")
-        bleTabView.addFragment(UserInfoTab(), "user")
+        bleTabView.addFragment(BleListTab(), "beacons")
+        bleTabView.addFragment(BleRadarTab(), "proximity")
+        bleTabView.addFragment(UserInfoTab(), "profile")
 
         viewPager.adapter = bleTabView
         tabLayout.setupWithViewPager(viewPager)

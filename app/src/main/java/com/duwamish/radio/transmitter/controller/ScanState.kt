@@ -18,7 +18,7 @@ class ScanState {
     companion object {
         private var beacons = HashMap<String, Beacon>()
 
-        private val scanIntervalMs = 10000L
+        private val SCAN_INTERVAL_MS = 60000L
         private var isScanning = false
 
         private val LOG_KEY = this.javaClass.name;
@@ -39,7 +39,7 @@ class ScanState {
                                 scanResult.device,
                                 scanResult.rssi,
                                 scanResult.txPower,
-                                scanResult.scanRecord.bytes
+                                scanResult
                         )
 
                         val eddystone = EddystoneScanApi.scan(
@@ -60,15 +60,7 @@ class ScanState {
                         val beaconsViewAdaptor = ArrayAdapter<String>(
                                 context,
                                 android.R.layout.simple_list_item_1,
-                                beacons.map { b ->
-                                    "UUID: " + b.key + "\n" +
-                                            "Protocol: " + b.value.protocol + "\n" +
-                                            "Major: " + b.value.major + " / " + "Minor: " + b.value.minor + "\n" +
-                                            "1m Transmitted Power: " + b.value.measuredPower + " dBMW \n" +
-                                            "Signal Strength: " + b.value.rsStrengthIndicator + " dBMW \n" +
-                                            "Estimated Distance: " + b.value.estimatedDistanceV2() + " m \n" +
-                                            "Last Detected: " + b.value.lastDetected.toString() + "\n"
-                                }
+                                beacons.toSortedMap().map { b -> b.value.toString() }
                         )
 
                         beaconsView.adapter = beaconsViewAdaptor
@@ -103,7 +95,7 @@ class ScanState {
 
                 isScanning = !isScanning
 
-                scanHandler.postDelayed(this, scanIntervalMs)
+                scanHandler.postDelayed(this, SCAN_INTERVAL_MS)
             }
         }
     }
