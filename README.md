@@ -15,7 +15,7 @@ https://www.bluetooth.com/bluetooth-technology/range/?utm_source=tw&utm_medium=s
 Layouts
 ------
 
-* [iBeacon](https://developer.apple.com/ibeacon/)
+[iBeacon](https://developer.apple.com/ibeacon/)
 ----
 
 - http://www.havlena.net/en/location-technologies/ibeacons-how-do-they-technically-work/
@@ -43,7 +43,7 @@ m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24
 
 https://beaconlayout.wordpress.com
 
-* [eddystone](https://developers.google.com/beacons/eddystone)
+[eddystone](https://developers.google.com/beacons/eddystone)
 ----
 
 - [https://github.com/google/eddystone/tree/master/eddystone-uid](https://github.com/google/eddystone/tree/master/eddystone-uid)
@@ -110,6 +110,15 @@ build artifact
 
 ```bash
 ./gradlew clean ##make sure to run before installing in device
+
+#build apk
+gradle assemble
+
+# apk
+λ ls -l app/build/outputs/apk/debug/
+total 6040
+-rw-r--r--  1 updupd  NA\Domain Users  3085844 Dec  9 12:23 app-debug.apk
+-rw-r--r--  1 updupd  NA\Domain Users      226 Dec  9 12:23 output.json
 ```
 
 - https://developer.android.com/studio/build/building-cmdline
@@ -139,6 +148,7 @@ references
 
 - https://accent-systems.com/wp-content/uploads/iBKS105_datasheet_rev1.pdf
 - [Understanding ibeacon distancing](https://stackoverflow.com/a/21617601/432903)
+- https://github.com/neXenio/BLE-Indoor-Positioning
 
 use cases
 ---------
