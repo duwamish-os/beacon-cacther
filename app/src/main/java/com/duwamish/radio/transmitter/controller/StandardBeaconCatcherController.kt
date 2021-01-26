@@ -15,10 +15,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.duwamish.radio.transmitter.R
 import com.duwamish.radio.transmitter.state.ApplicationState
-import com.duwamish.radio.transmitter.view.BleListTab
-import com.duwamish.radio.transmitter.view.BleRadarTab
-import com.duwamish.radio.transmitter.view.BleTabView
-import com.duwamish.radio.transmitter.view.UserInfoTab
+import com.duwamish.radio.transmitter.view.*
 
 class StandardBeaconCatcherController : AppCompatActivity() {
 
@@ -73,6 +70,7 @@ class StandardBeaconCatcherController : AppCompatActivity() {
     private fun renderTab() {
         bleTabView.addFragment(BleListTab(), "beacons")
         bleTabView.addFragment(BleRadarTab(), "proximity")
+        bleTabView.addFragment(CreativeTab(), "creative")
         bleTabView.addFragment(UserInfoTab(), "profile")
 
         viewPager.adapter = bleTabView

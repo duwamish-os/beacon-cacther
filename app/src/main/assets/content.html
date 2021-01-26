@@ -1,0 +1,29 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+    </script>
+    <script>
+      $(document).ready(function(){
+              scaleVideo();
+      });
+
+      function scaleVideo() {
+        var vid = document.getElementsByTagName('video')[0];
+        var w = window.screen.width;
+        var h = window.screen.height;
+
+        vid.setAttribute('width', w);
+        vid.setAttribute('height', h);
+      }
+    </script>
+</head>
+<body>
+
+<video controls>
+    <source src="https://github.com/prayagupd/travel-with-nodejs/blob/master/express-transit/assets/NikeAds.mp4?raw=true" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+</body>
+
+</html>
